@@ -1,34 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react';
+import { Routes, Route} from 'react-router-dom';
+import axios from 'axios';
+
 import './App.css'
+import Homepage from './components/Homepage/Homepage';
+import AllArticles from './components/Articles/AllArticles';
+import Article from './components/Articles/Article';
 
 function App() {
-  const [count, setCount] = useState(0)
+const [articles, setArticles] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <div className="bg-gradient-to-b from-[#32116e] to-[#bba5e1] bg-cover bg-center min-h-screen">
+      <Routes>
+        <Route path="/" element={
+          <div>
+            <Homepage loading={loading} setLoading={setLoading} error={error} setError={setError}/>
+          </div>} />
+        <Route path="/articles" element={<AllArticles articles={articles} setArticles={setArticles} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
+        <Route path="/articles/:articleId" element={<Article loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
+      </Routes>
+      
+    </div>
   )
 }
 
