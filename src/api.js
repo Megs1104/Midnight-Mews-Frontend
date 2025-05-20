@@ -60,3 +60,12 @@ export const updateCommentVotesByArticle = (commentId, inc_votes) => {
         return res.data.updatedComment
     })
 }
+
+export const updateArticleVotes = (articleId, inc_votes) => {
+    return midnightMewsApi.patch(`/articles/${articleId}`, {
+        inc_votes: inc_votes
+    })
+    .then((res) => {
+        return res.data.updatedArticle
+    })
+}

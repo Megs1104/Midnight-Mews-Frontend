@@ -41,7 +41,6 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
 
     function handleVote(commentId, voteType){
         const hasVoted = localStorage.getItem(`voted_${commentId}`) === 'true'
-        console.log(hasVoted)
 
         if (hasVoted){
             alert("You have already voted on this comment.")
@@ -52,7 +51,6 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
 
         updateCommentVotesByArticle(commentId, voteIncrement)
         .then((updatedComment) => {
-            console.log(updatedComment)
             const updatedComments = comments.map((comment) => {
                 if(comment.comment_id === commentId){
                     const updatedCommentData = {...comment, votes: updatedComment.votes};
