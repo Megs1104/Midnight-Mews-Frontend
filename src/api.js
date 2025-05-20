@@ -30,3 +30,33 @@ export const getRecentArticles = () => {
         return res.data.articles;
     })
 }
+
+export const getCommentsByArticle = (articleId) => {
+    return midnightMewsApi.get(`/articles/${articleId}/comments`)
+    .then((res) => {
+        return res.data.comments;
+    })
+}
+
+export const getAllUsers = () => {
+    return midnightMewsApi.get("/users")
+    .then((res) => {
+        return res.data.users;
+    })
+}
+
+export const getUser = (username) => {
+    return midnightMewsApi.get(`/users/${username}`)
+    .then((res) => {
+        return res.data.user;
+    })
+}
+
+export const updateCommentVotesByArticle = (commentId, inc_votes) => {
+    return midnightMewsApi.patch(`/comments/${commentId}`, {
+        inc_votes: inc_votes
+    })
+    .then((res) => {
+        return res.data.updatedComment
+    })
+}

@@ -4,8 +4,10 @@ import { getArticle, formattingString } from '../../api';
 import Loading from '../Loading/Loading';
 import Error from '../Error/Error';
 import { Link } from "react-router";
+import CommentsByArticle from "../Comments/CommentsByArticle";
 
-function Article({loading, setLoading, error, setError}){
+
+function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const { articleId } = useParams();
     const [article, setArticle] = useState({});
 
@@ -21,14 +23,14 @@ function Article({loading, setLoading, error, setError}){
         .finally(() => {
             setLoading(false);
         })
-    }, [setArticle]);
+    }, [articleId]);
 
     if (loading){
-        return Loading()
+        return <Loading />
     }
 
     if (error){
-        return Error()
+        return <Error />
     }
 
     return (
@@ -50,6 +52,8 @@ function Article({loading, setLoading, error, setError}){
             <p className="w-[900px]">{article.body}</p>
             </div>
         </div>
+            <CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            
     </div>
     )
 }

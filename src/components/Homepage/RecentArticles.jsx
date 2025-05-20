@@ -22,12 +22,12 @@ const [recentArticles, setrecentArticles] = useState([]);
 
     }, [setrecentArticles])
 
-    if (loading){
-        return Loading();
+     if (loading){
+        return <Loading />
     }
 
     if (error){
-        return Error()
+        return <Error />
     }
 
     return (

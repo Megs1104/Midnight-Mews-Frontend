@@ -1,4 +1,3 @@
-import React from "react";
 import { getAllArticles } from "../../api";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
@@ -23,12 +22,12 @@ function AllArticles({articles, setArticles, loading, setLoading, error, setErro
 
     }, [setArticles])
 
-    if (loading){
-        return Loading();
+      if (loading){
+        return <Loading />
     }
 
     if (error){
-        return Error()
+        return <Error />
     }
 
     return (
