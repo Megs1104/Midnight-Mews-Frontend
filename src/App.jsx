@@ -11,6 +11,7 @@ import AllUsers from './components/Users/AllUsers';
 import User from './components/Users/User';
 import Login from './components/Users/Login';
 import Profile from './components/Homepage/Profile';
+import AllTopics from './components/Topics/AllTopics';
 
 function App() {
 const [articles, setArticles] = useState([]);
@@ -27,7 +28,7 @@ const [error, setError] = useState(false);
             <Homepage loading={loading} setLoading={setLoading} error={error} setError={setError}/>
           </div>} />
 
-        <Route path="/articles" element={<AllArticles articles={articles} setArticles={setArticles} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
+        <Route path="/articles/:topic?" element={<AllArticles articles={articles} setArticles={setArticles} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
 
         <Route path="/articles/:articleId" element={<Article loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
 
@@ -41,6 +42,7 @@ const [error, setError] = useState(false);
 
         <Route path="/profile" element={<Profile />} />
 
+        <Route path="/topics" element={<AllTopics loading={loading} setLoading={setLoading} error={error} setError={setError}/>}></Route>
       </Routes>
       
     </div>
