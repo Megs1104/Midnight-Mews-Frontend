@@ -78,3 +78,7 @@ export const postNewComment = (articleId, username, body) => {
         return res.data;
     })
 }
+
+export const deleteComment = (commentId) => {
+    return midnightMewsApi.delete(`/comments/${commentId}`)
+}

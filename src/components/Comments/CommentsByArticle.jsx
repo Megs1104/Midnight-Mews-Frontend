@@ -4,13 +4,15 @@ import Error from '../Error/Error';
 import { Link } from "react-router";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
-import { updateCommentVotesByArticle } from "../../api";
+import { updateCommentVotesByArticle, deleteComment } from "../../api";
 
 function CommentsByArticle({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
+   const [user, setUser] = useState(null)
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
             setLoggedIn(true)
+            setUser(loggedInUser);
         }
     }, [])
 
@@ -64,6 +66,22 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
         })
     }
 
+    function handleDelete(commentId){
+        setLoading(true);
+        deleteComment(commentId)
+        .then(() => {
+            const updatedComments = comments.filter(comment => comment.comment_id !== commentId)
+            setComments(updatedComments)
+        })
+        .catch((err)=>{
+            setError(true);
+        })
+        .finally(() => {
+            setLoading(false)
+            alert("Your comment has been deleted!")
+        })
+    }
+
 
     return (
         <div className="relative p-4">
@@ -89,7 +107,11 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
                                         </>
                                      ) : (
                                         <p>Login to Vote</p>
-                                     )}   
+                                     )}  
+
+                                     {user === comment.author &&(
+                                        <button onClick={() => handleDelete(comment.comment_id)} className="bg-[#BBA5E1] p-2 w-20 rounded-lg">Delete</button>
+                                     )} 
                                     </div>
                                     </td>
                                 </tr>
