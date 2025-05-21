@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { getArticle, formattingString, updateArticleVotes } from '../../api';
 import Loading from '../Loading/Loading';
-import Error from '../Error/Error';
+import NotFoundError from '../Error/NotFoundError';
 import { Link } from "react-router";
 import CommentsByArticle from "../Comments/CommentsByArticle";
 import AddNewComment from "../Comments/AddNewComment";
@@ -14,6 +14,7 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const [hasVoted, setHasVoted] = useState(false);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
+    
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
@@ -30,6 +31,7 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
             setHasVoted(voted)
         })
         .catch((err) => {
+            console.log(err)
             setError(true);
         })
         .finally(() => {
@@ -42,7 +44,7 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     }
 
     if (error){
-        return <Error />
+        return <NotFoundError />
     }
 
     function handleVote(articleId, voteType){

@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import Loading from "../Loading/Loading";
-import Error from '../Error/Error';
+import PathNotFoundError from '../Error/PathNotFoundError';
 
 function User({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const { username } = useParams();
@@ -27,7 +27,7 @@ function User({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     }
 
     if (error){
-        return <Error />
+        return <PathNotFoundError/>
     }
  return (
        <div>

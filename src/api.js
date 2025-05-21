@@ -5,11 +5,19 @@ const midnightMewsApi = axios.create({
     baseURL: "https://megs-news-app.onrender.com/api"
 });
 
-export const getAllArticles = (topic, sortBy, order) => {
-    console.log(topic, sortBy, order)
-    return midnightMewsApi.get("/articles", {params:{topic: topic, sort_by: sortBy, order: order}})
+export const getAllArticles = (topic, sortBy, order, currentPage, articlesPerPage) => {
+
+    let params = {
+        sort_by: sortBy, 
+        order: order,
+        limit: articlesPerPage, 
+        p: currentPage}
+    
+        if (topic){
+            params.topic = topic;
+        }
+    return midnightMewsApi.get("/articles", {params})
     .then((res) => {
-        console.log(res.data)
         return res.data.articles;
     });
 };
@@ -77,7 +85,7 @@ export const postNewComment = (articleId, username, body) => {
         username: username, body: body
     })
     .then((res) => {
-        return res.data;
+        return res.data.newComment;
     })
 }
 

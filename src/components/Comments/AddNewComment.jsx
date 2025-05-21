@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { postNewComment } from "../../api";
+import PostingError from "../Error/PostingError";
 
 function AddNewComment({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
 
@@ -21,6 +22,7 @@ function AddNewComment({loading, setLoading, error, setError, articleId, loggedI
             setLoading(true);
             postNewComment(articleId, loggedInUser, newComment)
             .then((newCommentData) => {
+                console.log(newCommentData)
                 setNewComment("");
 
                 setComments((prevComments) => [newCommentData, ...prevComments])
@@ -39,12 +41,12 @@ function AddNewComment({loading, setLoading, error, setError, articleId, loggedI
         return <Loading />
     }
 
-    if (error){
-        return <Error />
-    }
-
     return(
         <div className="max-w-md mx-auto mt-8 p-6">
+        {error && (
+            <PostingError />
+        )}
+
         {loggedIn ? (
             <>
             <form onSubmit={handleSubmit}>
@@ -52,7 +54,7 @@ function AddNewComment({loading, setLoading, error, setError, articleId, loggedI
                     <label htmlFor="comment" className="block text-lg font-medium mb-2 text-white">
                         Add Comment:
                     </label>
-                    <input type="text" id="comment" value={newComment} onChange={handleChange} className="bg-white rounded-lg w-full h-24"/>
+                    <input type="text" id="comment" value={newComment} onChange={handleChange} className="bg-white rounded-lg w-full h-24" required/>
                 </div>
                 <button type="submit" className="bg-[#BBA5E1] p-2 rounded-lg text-white">Post Comment</button>
             </form>

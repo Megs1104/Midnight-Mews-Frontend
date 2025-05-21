@@ -1,6 +1,6 @@
 import { getCommentsByArticle } from "../../api";
 import Loading from '../Loading/Loading';
-import Error from '../Error/Error';
+import Error from '../Error/GeneralError';
 import { Link } from "react-router";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
@@ -19,6 +19,7 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
     useEffect(() => {
         getCommentsByArticle(articleId)
         .then((res) => {
+            console.log(res)
             setComments(res)
         })
         .catch((err) => {
@@ -28,14 +29,14 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
             setLoading(false);
         })
 
-    }, [articleId, setNewComment])
+    }, [articleId])
 
      if (loading){
         return <Loading />
     }
 
     if (error){
-        return <Error />
+        return <GeneralError />
     }
 
     function handleVote(commentId, voteType){

@@ -3,12 +3,16 @@ import { useParams, useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import Loading from "../Loading/Loading";
-import Error from '../Error/Error';
+import NotFoundError from '../Error/NotFoundError';
 
 function AllArticles({articles, setArticles, loading, setLoading, error, setError}){
     const { topic } = useParams();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [page, setPage] = useState(1);
+    const [totalArticles, setTotalArticles] = useState(1);
+    const articlesPerPage = 10;
+
 
     const sortBy = searchParams.get("sort_by") || "created_at";
     const order = searchParams.get("order") || "desc";
@@ -25,10 +29,12 @@ function AllArticles({articles, setArticles, loading, setLoading, error, setErro
 
     useEffect(() => {
         setLoading(true);
-        getAllArticles(topic, sortBy, order)
+        getAllArticles(topic, sortBy, order, page, articlesPerPage)
         .then((res) => {
             console.log(res)
             setArticles(res.articles)
+            setTotalArticles(res.total_count)
+
         })
         .catch((err) => {
             setError(true);
@@ -37,14 +43,28 @@ function AllArticles({articles, setArticles, loading, setLoading, error, setErro
             setLoading(false);
         })
 
-    }, [topic, setArticles, sortBy, order])
+    }, [topic, setArticles, sortBy, order, page])
 
       if (loading){
         return <Loading />
     }
 
     if (error){
-        return <Error />
+        return <NotFoundError />
+    }
+
+    const totalPages = Math.ceil(totalArticles /articlesPerPage);
+
+    function handleNextPage(){
+        if (page < totalPages){
+            setPage(prevPage => prevPage + 1)
+        }
+    }
+
+    function handlePreviousPage(){
+        if (page > 1){
+            setPage(prevPage => prevPage -1)
+        }
     }
 
     return (
@@ -80,15 +100,16 @@ function AllArticles({articles, setArticles, loading, setLoading, error, setErro
                         <h3>{article.title}</h3>
                         <h4>By {article.author}</h4>
                         <p>Topic: {article.topic}</p>
-                        <Link to={`/articles/${article.article_id}`}>
+                        <Link to={`/articles/article/${article.article_id}`}>
                         <button className="bg-[#BBA5E1] p-2 rounded-lg">View</button>
                         </Link>
                     </div>
                 )})}
             </div>
-            <Link to="/articles/:article">
-                <button className="bg-[#BBA5E1] p-2 rounded-lg">Next page</button>
-            </Link>
+            <div className="mt-3">
+                <button onClick={handlePreviousPage} className="bg-[#BBA5E1] p-2 rounded-lg" disabled={page === 1}>Previous page</button>
+                <button onClick={handleNextPage} className="bg-[#BBA5E1] p-2 rounded-lg ml-4" disabled={page === totalPages}>Next page</button>
+            </div>
         </div>
 )
 }

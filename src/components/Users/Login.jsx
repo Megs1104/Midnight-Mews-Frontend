@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loading from "../Loading/Loading";
-import Error from '../Error/Error';
+import Error from '../Error/GeneralError';
 import { getAllUsers } from "../../api";
 
 function Login({loading, setLoading, error, setError, loggedIn, setLoggedIn, users, setUsers}){
@@ -50,7 +50,7 @@ const [selectedUser, setSelectedUser] = useState("")
     }
 
     if (error){
-        return <Error />
+        return <GeneralError />
 
     }
 
