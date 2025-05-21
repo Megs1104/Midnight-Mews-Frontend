@@ -5,12 +5,15 @@ import Loading from '../Loading/Loading';
 import Error from '../Error/Error';
 import { Link } from "react-router";
 import CommentsByArticle from "../Comments/CommentsByArticle";
+import AddNewComment from "../Comments/AddNewComment";
 
 
 function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const { articleId } = useParams();
     const [article, setArticle] = useState({});
     const [hasVoted, setHasVoted] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState("");
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
@@ -99,7 +102,8 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
             <p className="w-[900px]">{article.body}</p>
             </div>
         </div>
-            <CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <AddNewComment loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
+            <CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
             
     </div>
     )

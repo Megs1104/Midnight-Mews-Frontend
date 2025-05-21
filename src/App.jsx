@@ -40,6 +40,7 @@ const [error, setError] = useState(false);
         <Route path="/login" element={<Login loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn} users={users} setUsers={setUsers} />} />
 
         <Route path="/profile" element={<Profile />} />
+
       </Routes>
       
     </div>

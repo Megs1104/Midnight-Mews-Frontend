@@ -6,9 +6,7 @@ import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { updateCommentVotesByArticle } from "../../api";
 
-function CommentsByArticle({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn}){
-    const [comments, setComments] = useState([]);
-
+function CommentsByArticle({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
@@ -22,14 +20,13 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
             setComments(res)
         })
         .catch((err) => {
-            console.log(err)
             setError(true)
         })
         .finally(() => {
             setLoading(false);
         })
 
-    }, [articleId])
+    }, [articleId, setNewComment])
 
      if (loading){
         return <Loading />
@@ -55,7 +52,7 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
                 if(comment.comment_id === commentId){
                     const updatedCommentData = {...comment, votes: updatedComment.votes};
 
-                    localStorage.setItem(`voted_${commentId}`, true);
+                    localStorage.setItem(`voted_${commentId}`, "true");
                     return updatedComment;
                 }
                 return comment;
@@ -63,7 +60,6 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
             setComments(updatedComments)
         })
         .catch((err) => {
-            console.log(err)
             setError(true)
         })
     }
@@ -76,7 +72,7 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
                 <table className="bg-white rounded-lg">
                     <tbody>
                         {comments.map((comment) => {
-                            const hasVoted = localStorage.getItem(`voted_${comment.comment_id}` === 'true')
+                            const hasVoted = localStorage.getItem(`voted_${comment.comment_id}`) === 'true'
                             return(
                                 <tr key={comment.comment_id} className="border-b">
                                     <td className="p-4 flex flex-col space-y-4">

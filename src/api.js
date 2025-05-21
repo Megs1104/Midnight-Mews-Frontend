@@ -69,3 +69,12 @@ export const updateArticleVotes = (articleId, inc_votes) => {
         return res.data.updatedArticle
     })
 }
+
+export const postNewComment = (articleId, username, body) => {
+    return midnightMewsApi.post(`/articles/${articleId}/comments`, {
+        username: username, body: body
+    })
+    .then((res) => {
+        return res.data;
+    })
+}
