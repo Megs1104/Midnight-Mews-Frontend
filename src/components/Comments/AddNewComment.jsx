@@ -30,6 +30,7 @@ function AddNewComment({loading, setLoading, error, setError, articleId, loggedI
             })
             .finally(() => {
                 setLoading(false);
+                alert("Your comment has been posted!");
             })
         }
     }
