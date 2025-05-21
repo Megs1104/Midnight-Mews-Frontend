@@ -1,12 +1,25 @@
-# React + Vite
+# Midnight Mews Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Live demo: link coming soon...
+<hr>
+A front-end web application that allows users to view news articles, comment and manage topics alongside managing and posting articles, comments and new topics. Built with React, React Router, Tailwind, CSS and JavaScript.
 
-Currently, two official plugins are available:
+Corresponding backend:  https://megs-news-app.onrender.com/api
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started:
 
-## Expanding the ESLint configuration
+Ensure you have the following installed on your machine:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Node.js (version 23.11.0 or higher)
+
+npm (version 11.3.0 or higher)
+
+## Installation:
+
+1. Clone this repository.
+2. Install dependencies using npm install.
+3. Run npm run dev to view.
+
+Thanks for looking! 
+
+This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
