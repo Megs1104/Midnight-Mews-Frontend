@@ -5,9 +5,11 @@ const midnightMewsApi = axios.create({
     baseURL: "https://megs-news-app.onrender.com/api"
 });
 
-export const getAllArticles = (topic) => {
-    return midnightMewsApi.get("/articles", {params:{topic: topic}})
+export const getAllArticles = (topic, sortBy, order) => {
+    console.log(topic, sortBy, order)
+    return midnightMewsApi.get("/articles", {params:{topic: topic, sort_by: sortBy, order: order}})
     .then((res) => {
+        console.log(res.data)
         return res.data.articles;
     });
 };
