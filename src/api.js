@@ -5,8 +5,8 @@ const midnightMewsApi = axios.create({
     baseURL: "https://megs-news-app.onrender.com/api"
 });
 
-export const getAllArticles = () => {
-    return midnightMewsApi.get("/articles")
+export const getAllArticles = (topic) => {
+    return midnightMewsApi.get("/articles", {params:{topic: topic}})
     .then((res) => {
         return res.data.articles;
     });
@@ -81,4 +81,11 @@ export const postNewComment = (articleId, username, body) => {
 
 export const deleteComment = (commentId) => {
     return midnightMewsApi.delete(`/comments/${commentId}`)
+}
+
+export const getAllTopics = () => {
+    return midnightMewsApi.get("/topics")
+    .then((res) => {
+        return res.data.topics
+    })
 }

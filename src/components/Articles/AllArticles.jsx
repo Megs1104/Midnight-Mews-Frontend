@@ -6,10 +6,11 @@ import Loading from "../Loading/Loading";
 import Error from '../Error/Error';
 
 function AllArticles({articles, setArticles, loading, setLoading, error, setError}){
+    const { topic } = useParams();
 
     useEffect(() => {
         setLoading(true);
-        getAllArticles()
+        getAllArticles(topic)
         .then((res) => {
             setArticles(res.articles)
         })
@@ -20,7 +21,7 @@ function AllArticles({articles, setArticles, loading, setLoading, error, setErro
             setLoading(false);
         })
 
-    }, [setArticles])
+    }, [topic, setArticles])
 
       if (loading){
         return <Loading />
