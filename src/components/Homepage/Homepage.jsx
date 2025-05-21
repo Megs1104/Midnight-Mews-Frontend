@@ -3,8 +3,14 @@
  import HomepageHeader from "./HomepageHeader";
  import RecentArticles from "./RecentArticles";
  import Profile from "./Profile";
+import { useEffect } from "react";
  
  function Homepage({loading, setLoading, error, setError}){
+
+    useEffect(() => {
+        setError(false);
+    }, [setError])
+    
     return (
     <div className="relative">
             <Profile />

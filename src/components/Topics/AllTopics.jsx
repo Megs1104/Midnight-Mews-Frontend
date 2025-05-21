@@ -2,7 +2,7 @@ import { getAllTopics, formattingString } from "../../api";
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import Loading from "../Loading/Loading";
-import Error from "../Error/Error";
+import Error from "../Error/GeneralError";
 
 function AllTopics({loading, setLoading, error, setError}){
     const [topics, setTopics] = useState([]);
@@ -26,7 +26,7 @@ function AllTopics({loading, setLoading, error, setError}){
     }
 
     if (error){
-        return <Error />
+        return <GeneralError />
     }
 
     return (

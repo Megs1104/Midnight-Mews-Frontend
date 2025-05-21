@@ -1,7 +1,7 @@
 import { getRecentArticles} from "../../api";
 import { useState, useEffect } from "react";
 import Loading from "../Loading/Loading";
-import Error from "../Error/Error";
+import GeneralError from "../Error/GeneralError";
 import { Link } from "react-router";
 
 function RecentArticles({loading, setLoading, error, setError}){
@@ -14,6 +14,7 @@ const [recentArticles, setrecentArticles] = useState([]);
             setrecentArticles(recentFiveArticles)
         })
         .catch((err) => {
+            console.log(err)
             setError(true);
         })
         .finally(() => {
@@ -27,7 +28,7 @@ const [recentArticles, setrecentArticles] = useState([]);
     }
 
     if (error){
-        return <Error />
+        return <GeneralError />
     }
 
     return (
@@ -47,7 +48,7 @@ const [recentArticles, setrecentArticles] = useState([]);
                                     <h3>{article.title}</h3>
                                     <h4>By {article.author}</h4>
                                     <p>Topic: {article.topic}</p>
-                                    <Link to={`/articles/${article.article_id}`}>
+                                    <Link to={`/articles/article/${article.article_id}`}>
                                     <button className="bg-[#BBA5E1] p-2 rounded-lg">View</button>
                                     </Link>
                                     </td>

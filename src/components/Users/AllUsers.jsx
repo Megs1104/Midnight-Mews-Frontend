@@ -2,7 +2,7 @@ import { getAllUsers } from "../../api";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import Loading from "../Loading/Loading";
-import Error from '../Error/Error';
+import Error from '../Error/GeneralError';
 
 function AllUsers({users, setUsers, loading, setLoading, error, setError}){
 useEffect(() => {
@@ -25,7 +25,7 @@ useEffect(() => {
     }
 
     if (error){
-        return <Error />
+        return <GeneralError />
 
     }
     return (

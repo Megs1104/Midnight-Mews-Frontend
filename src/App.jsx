@@ -12,6 +12,7 @@ import User from './components/Users/User';
 import Login from './components/Users/Login';
 import Profile from './components/Homepage/Profile';
 import AllTopics from './components/Topics/AllTopics';
+import PathNotFoundError from './components/Error/PathNotFoundError';
 
 function App() {
 const [articles, setArticles] = useState([]);
@@ -30,9 +31,9 @@ const [error, setError] = useState(false);
 
         <Route path="/articles/:topic?" element={<AllArticles articles={articles} setArticles={setArticles} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
 
-        <Route path="/articles/:articleId" element={<Article loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
+        <Route path="/articles/article/:articleId" element={<Article loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
 
-        <Route path="/articles/:articleId/comments" element={<CommentsByArticle />}/>
+        <Route path="/articles/article/:articleId/comments" element={<CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
 
         <Route path="/users" element={<AllUsers users={users} setUsers={setUsers} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
 
@@ -43,6 +44,8 @@ const [error, setError] = useState(false);
         <Route path="/profile" element={<Profile />} />
 
         <Route path="/topics" element={<AllTopics loading={loading} setLoading={setLoading} error={error} setError={setError}/>}></Route>
+      
+        <Route path="*" element={<PathNotFoundError />} />
       </Routes>
       
     </div>
