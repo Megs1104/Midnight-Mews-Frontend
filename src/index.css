@@ -12,6 +12,9 @@ body {
   min-height: 100vh;
   z-index: -1;
   height: 100%;
+  font-family: 'Quicksand', sans-serif;
+  color: #32116E;
+  font-weight: 650;
 }
 
 html{
@@ -26,16 +29,15 @@ html{
   width: 100%;
   margin-top: 20px;
   z-index: 10;
-  position: absolute;
   top: 4;
 }
 
 .logo{
   border: 2px solid white;
-  padding: 10px;
+  padding: 5px;
   background-color: white;
   border-radius: 8px;
-  top: 2;
+  height: 120px;
 }
 
 button{

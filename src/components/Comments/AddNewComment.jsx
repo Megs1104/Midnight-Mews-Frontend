@@ -1,50 +1,61 @@
 import { useState, useEffect } from "react";
 import { postNewComment } from "../../api";
-import PostingError from "../Error/PostingError";
 
-function AddNewComment({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
+function AddNewComment({articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
+const [postingLoading, setPostingLoading] = useState(false);
+const [postingError, setPostingError] = useState(false);
 
     useEffect(() => {
-        const loggedInUser = localStorage.getItem('loggedInUser')
+        const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
             setLoggedIn(true);
         }
-    }, [setLoggedIn])
+    }, [setLoggedIn]);
 
     function handleChange(e){
         setNewComment(e.target.value);
-    }
+    };
 
     function handleSubmit(e){
-        const loggedInUser = localStorage.getItem('loggedInUser')
+        const loggedInUser = localStorage.getItem('loggedInUser');
         e.preventDefault();
         if(newComment.trim()){
-            setLoading(true);
+            setPostingLoading(true);
+            setPostingError(false);
+
+            if(!navigator.online){
+                setPostingLoading(false);
+                setPostingError(true);
+                return;
+            }
+
+            const errorTimer = setTimeout(() => {
+                setPostingLoading(false);
+                setPostingError(true);
+            }, 300000); 
+
             postNewComment(articleId, loggedInUser, newComment)
             .then((newCommentData) => {
-                console.log(newCommentData)
+                clearTimeout(errorTimer);
                 setNewComment("");
-
-                setComments((prevComments) => [newCommentData, ...prevComments])
+                setComments((prevComments) => [ newCommentData, ...prevComments]);
             })
             .catch((err) => {
-                setError(true);
+                clearTimeout(errorTimer);
+                setPostingError(true);
             })
             .finally(() => {
-                setLoading(false);
-                alert("Your comment has been posted!");
-            })
-        }
-    }
-
-    if (loading){
-        return <Loading />
-    }
+                setPostingLoading(false);
+            });
+        };
+    };
 
     return(
         <div className="max-w-md mx-auto mt-8 p-6">
-        {error && (
-            <PostingError />
+        {postingError && (
+            <div>
+                <p className="bg-white text-red-600 rounded-lg">Error posting comment, please try again later.</p>
+            </div>
         )}
 
         {loggedIn ? (
@@ -56,7 +67,7 @@ function AddNewComment({loading, setLoading, error, setError, articleId, loggedI
                     </label>
                     <input type="text" id="comment" value={newComment} onChange={handleChange} className="bg-white rounded-lg w-full h-24" required/>
                 </div>
-                <button type="submit" className="bg-[#BBA5E1] p-2 rounded-lg text-white">Post Comment</button>
+                <button type="submit" disabled={postingLoading} className="bg-[#BBA5E1] p-2 rounded-lg text-white">{postingLoading ? "Posting..." : "Post Comment"}</button>
             </form>
             </>
         ) : (
