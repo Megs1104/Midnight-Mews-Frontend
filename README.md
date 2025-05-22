@@ -1,6 +1,6 @@
 # Midnight Mews Frontend
 
-> Live demo: link coming soon...
+> Live demo: https://midnight-mews.netlify.app/
 <hr>
 A front-end web application that allows users to view news articles, comment and manage topics alongside managing and posting articles, comments and new topics. Built with React, React Router, Tailwind, CSS and JavaScript.
 
