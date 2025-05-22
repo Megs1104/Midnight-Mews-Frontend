@@ -1,21 +1,21 @@
- import React from "react";
- import { Link } from "react-router-dom";
- import HomepageHeader from "./HomepageHeader";
- import RecentArticles from "./RecentArticles";
- import Profile from "./Profile";
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
+
+import HomepageHeader from "./HomepageHeader";
+import RecentArticles from "./RecentArticles";
+import Profile from "./Profile";
  
  function Homepage({loading, setLoading, error, setError}){
 
     useEffect(() => {
         setError(false);
-    }, [setError])
+    }, [setError]);
     
     return (
     <div className="relative">
             <Profile />
             <HomepageHeader />
-        <div className="pt-32 p-2"> 
+        <div className="mt-1 p-2"> 
             <div className="bg-[#BBA5E1] p-4 rounded-lg w-full mt-2">
             <Link to="/articles">
                 <button className="bg-white p-3 rounded-lg">Articles</button>
@@ -32,7 +32,7 @@ import { useEffect } from "react";
             <RecentArticles loading={loading} setLoading={setLoading} error={error} setError={setError}/>
          </div>
     </div>
-    )
- }
+    );
+ };
 
  export default Homepage;

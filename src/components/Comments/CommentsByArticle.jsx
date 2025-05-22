@@ -1,51 +1,56 @@
 import { getCommentsByArticle } from "../../api";
-import Loading from '../Loading/Loading';
-import Error from '../Error/GeneralError';
-import { Link } from "react-router";
-import { useParams } from "react-router";
 import { useState, useEffect } from "react";
-import { updateCommentVotesByArticle, deleteComment } from "../../api";
+import { updateCommentVotesByArticle, deleteComment, formattingDate } from "../../api";
+
+import Loading from '../Loading/Loading';
+import GeneralError from '../Error/GeneralError';
 
 function CommentsByArticle({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
-   const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
+    const [votingError, setVotingError] = useState(null);
+    const [deleteError, setDeleteError] = useState(null);
+    const [hasAlreadyVoted, setHasAlreadyVoted] = useState(null);
+
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
             setLoggedIn(true)
             setUser(loggedInUser);
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         getCommentsByArticle(articleId)
         .then((res) => {
-            console.log(res)
-            setComments(res)
+            setComments(res);
         })
         .catch((err) => {
-            setError(true)
+            setError(true);
         })
         .finally(() => {
             setLoading(false);
         })
 
-    }, [articleId])
+    }, [articleId]);
 
-     if (loading){
-        return <Loading />
-    }
+     useEffect(() => {
+        let errorTimer = null;
 
-    if (error){
-        return <GeneralError />
-    }
+        if (hasAlreadyVoted !== null){
+            errorTimer = setTimeout(() => {
+                setHasAlreadyVoted(null);
+            }, 20000); 
+        }
+        return () => clearTimeout(errorTimer);
+    }, [hasAlreadyVoted]);
 
     function handleVote(commentId, voteType){
-        const hasVoted = localStorage.getItem(`voted_${commentId}`) === 'true'
+        const hasVoted = localStorage.getItem(`voted_${commentId}`) === 'true';
 
         if (hasVoted){
-            alert("You have already voted on this comment.")
+            setHasAlreadyVoted(commentId);
             return;
-        }
+        };
 
         const voteIncrement = voteType === "+" ? 1 : -1;
 
@@ -57,32 +62,37 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
 
                     localStorage.setItem(`voted_${commentId}`, "true");
                     return updatedComment;
-                }
+                };
                 return comment;
-            })
-            setComments(updatedComments)
+            });
+            setComments(updatedComments);
+            setVotingError(null);
+            setHasAlreadyVoted(null);
         })
         .catch((err) => {
-            setError(true)
-        })
-    }
+            setVotingError(commentId)
+        });
+    };
 
     function handleDelete(commentId){
-        setLoading(true);
         deleteComment(commentId)
         .then(() => {
-            const updatedComments = comments.filter(comment => comment.comment_id !== commentId)
-            setComments(updatedComments)
+            const updatedComments = comments.filter(comment => comment.comment_id !== commentId);
+            setComments(updatedComments);
+            setDeleteError(null);
         })
         .catch((err)=>{
-            setError(true);
-        })
-        .finally(() => {
-            setLoading(false)
-            alert("Your comment has been deleted!")
-        })
-    }
+            setDeleteError(commentId);
+        });
+    };
 
+    if (loading){
+        return <Loading />;
+    };
+
+    if (error){
+        return <GeneralError />;
+    };
 
     return (
         <div className="relative p-4">
@@ -97,22 +107,43 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
                                     <td className="p-4 flex flex-col space-y-4">
                                     <p>{comment.body}</p>
                                     <p>By {comment.author}</p>
-                                    <p>{comment.created_at}</p>
-                                    <div className="flex items-center space-x-2 mt-2">
-                                        <p>Votes: {comment.votes}</p>
+                                    <p>Created at: {formattingDate(comment.created_at)}</p>
+
+                                        <div className="flex items-center space-x-2 mt-2">
+                                            <p>Votes: {comment.votes}</p>
 
                                      {loggedIn ? (
                                         <>
-                                        <button disabled={hasVoted} onClick={() => handleVote(comment.comment_id, "+")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">+1</button>
-                                        <button disabled={hasVoted} onClick={() => handleVote(comment.comment_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">-1</button>
+                                        {user !== comment.author && (
+                                        <>
+                                            {votingError === comment.comment_id && (
+                                                <div>
+                                                     <p className="bg-white text-red-600 rounded-lg p-2">Error voting, please try again later.</p>
+                                                </div>
+                                            )}
+                                            {hasAlreadyVoted === comment.comment_id && (
+                                                <div>
+                                                     <p className="bg-white text-red-600 rounded-lg p-2">You have already voted on this comment.</p>
+                                                </div>
+                                            )}
+                                        <button onClick={() => handleVote(comment.comment_id, "+")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">+1</button>
+                                        <button onClick={() => handleVote(comment.comment_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">-1</button>
                                         </>
-                                     ) : (
-                                        <p>Login to Vote</p>
                                      )}  
 
-                                     {user === comment.author &&(
-                                        <button onClick={() => handleDelete(comment.comment_id)} className="bg-[#BBA5E1] p-2 w-20 rounded-lg">Delete</button>
+                                     {user === comment.author && (
+                                        <div>
+                                            {deleteError === comment.comment_id && (
+                                                <div>
+                                                     <p className="bg-white text-red-600 rounded-lg p-2">Error deleting comment, please try again later.</p>
+                                                </div>
+                                            )}
+                                            <button onClick={() => handleDelete(comment.comment_id)} className="bg-[#BBA5E1] p-2 w-20 rounded-lg">Delete</button>
+                                        </div>
                                      )} 
+                                     </>
+                                    ) : ( <p>Login to Vote</p> 
+                                    )}
                                     </div>
                                     </td>
                                 </tr>
@@ -121,8 +152,7 @@ function CommentsByArticle({loading, setLoading, error, setError, articleId, log
                     </tbody>
                 </table>
         </div>
-    )
-
-}
+    );
+};
 
 export default CommentsByArticle;

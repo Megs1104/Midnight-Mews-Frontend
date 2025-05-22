@@ -1,12 +1,12 @@
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
-import { getArticle, formattingString, updateArticleVotes } from '../../api';
+import { getArticle, formattingString, updateArticleVotes, formattingDate } from '../../api';
+import { Link } from "react-router";
+
 import Loading from '../Loading/Loading';
 import NotFoundError from '../Error/NotFoundError';
-import { Link } from "react-router";
 import CommentsByArticle from "../Comments/CommentsByArticle";
 import AddNewComment from "../Comments/AddNewComment";
-
 
 function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const { articleId } = useParams();
@@ -14,24 +14,28 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const [hasVoted, setHasVoted] = useState(false);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    
+    const [votingError, setVotingError] = useState(null);
+    const [hasAlreadyVoted, setHasAlreadyVoted] = useState(null);
+
+    const loggedInUser = localStorage.getItem('loggedInUser');
+
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser){
-            setLoggedIn(true)
+            setLoggedIn(true);
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         setLoading(true);
+        setError(false);
         getArticle(articleId)
         .then((res) => {
             setArticle(res);
-            const voted = localStorage.getItem(`voted_${articleId}`) === 'true'
-            setHasVoted(voted)
+            const voted = localStorage.getItem(`voted_${articleId}`) === 'true';
+            setHasVoted(voted);
         })
         .catch((err) => {
-            console.log(err)
             setError(true);
         })
         .finally(() => {
@@ -39,43 +43,52 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
         })
     }, [articleId]);
 
-    if (loading){
-        return <Loading />
-    }
+    useEffect(() => {
+            let errorTimer = null;
 
-    if (error){
-        return <NotFoundError />
-    }
+            if (hasAlreadyVoted !== null){
+                errorTimer = setTimeout(() => {
+                    setHasAlreadyVoted(null);
+                }, 20000); 
+            }
+            return () => clearTimeout(errorTimer);
+    }, [hasAlreadyVoted]);
 
     function handleVote(articleId, voteType){
-        const hasAlreadyVoted = localStorage.getItem(`voted_${articleId}`) === 'true'
-        if (hasAlreadyVoted){
-            alert("You have already voted on this article.")
+        const hasVoted = localStorage.getItem(`voted_${articleId}`) === 'true';
+        if (hasVoted){
+            setHasAlreadyVoted(articleId)
             return;
-        }
+        };
 
         const voteIncrement = voteType === "+" ? 1 : -1;
 
         const updatedVotes = article.votes + voteIncrement;
         setArticle(prevArticle => ({
             ...prevArticle, votes: updatedVotes,
-        }))
+        }));
 
         updateArticleVotes(articleId, voteIncrement)
         .then((updatedArticle) => {
-            setArticle(updatedArticle)
-            localStorage.setItem(`voted_${articleId}`, 'true')
+            setArticle(updatedArticle);
+            localStorage.setItem(`voted_${articleId}`, 'true');
             setHasVoted(true);
         })
         .catch((err) => {
-            setError(true)
+            setVotingError(articleId);
             setArticle(prevArticle => ({
             ...prevArticle, votes: prevArticle.votes - voteIncrement,
-        }))
-        })
+        }));
+        });
+    };
 
+     if (loading){
+        return <Loading />;
+    };
 
-    }
+    if (error){
+        return <NotFoundError />;
+    };
 
     return (
        <div>
@@ -84,31 +97,52 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
             <button className="bg-[#BBA5E1] p-2 rounded-lg fixed top-4 left-4">Home</button>
             </Link>
         </div>
-        <div className="relative p-4" key={article.article_id}>
-            <h3 className="text-3xl text-white p-4">{article.title}</h3>
-            <h4 className="text-xl text-white p-4">By {article.author}</h4>
-            <div className="bg-white p-4 rounded-lg ml-6 mr-6">
-            <img src={article.article_img_url} alt={`Image for ${article.title}`} className="mx-auto w-100 p-4" />
-            <p>Topic: {formattingString(article.topic)}</p>
-            <p>Votes: {article.votes}</p>
+            <div className="relative p-4" key={article.article_id}>
+                <h3 className="text-3xl text-white p-4">{article.title}</h3>
+                <h4 className="text-xl text-white p-4">By {article.author}</h4>
+                <div className="bg-white p-4 rounded-lg ml-6 mr-6">
+                <img src={article.article_img_url} alt={`Image for ${article.title}`} className="mx-auto w-100 p-4" />
+                <p>Topic: {formattingString(article.topic)}</p>
+                <p>Votes: {article.votes}</p>
+            
             {loggedIn ? (
                      <>
+                     {loggedInUser !== article.author && (
+                        <>
+                        {votingError && (
+                            <div>
+                                <p className="bg-white text-red-600 rounded-lg p-2">Error voting, please try again later.</p>
+                            </div>
+                        )}
+                        {hasAlreadyVoted && (
+                            <div>
+                                <p className="bg-white text-red-600 rounded-lg p-2">You have already voted on this article.</p>
+                            </div>
+                        )}
+
                         <button onClick={() => handleVote(article.article_id, "+")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">+1</button>
-                        <button onClick={() => handleVote(article.article_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">-1</button>
-                     </>
-                ) : (
-                    <p>Login to Vote</p>
+                        <button onClick={() => handleVote(article.article_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg ml-2">-1</button>
+                        </>
+                     )}
+                        
+                     {loggedInUser === article.author && (
+                        <button className="bg-[#BBA5E1] p-2 w-35 rounded-lg">Delete Article</button>
+                     )}
+                    </>
+                    ) : (
+                        <p>Login to Vote</p>
                     )} 
-            <p>Created at: {article.created_at}</p>
-            <p>Comment Count: {article.comment_count}</p>
-            <p className="w-[900px]">{article.body}</p>
+
+                <p>Created at: {formattingDate(article.created_at)}</p>
+                <p>Comment Count: {article.comment_count}</p>
+                <p>{article.body}</p>
             </div>
         </div>
-            <AddNewComment loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
+            <AddNewComment articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
             <CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
             
     </div>
     )
 }
 
-export default Article
+export default Article;

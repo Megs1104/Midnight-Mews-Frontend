@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route} from 'react-router-dom';
-import axios from 'axios';
 
 import './App.css'
 import Homepage from './components/Homepage/Homepage';
@@ -52,4 +51,4 @@ const [error, setError] = useState(false);
   )
 }
 
-export default App
+export default App;

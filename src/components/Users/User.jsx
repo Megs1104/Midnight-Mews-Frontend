@@ -2,6 +2,7 @@ import { getUser } from "../../api";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+
 import Loading from "../Loading/Loading";
 import PathNotFoundError from '../Error/PathNotFoundError';
 
@@ -20,16 +21,17 @@ function User({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
         .finally(() => {
             setLoading(false);
         })
-    }, [user])
+    }, [user]);
 
     if (loading){
-        return <Loading />
-    }
+        return <Loading />;
+    };
 
     if (error){
-        return <PathNotFoundError/>
-    }
- return (
+        return <PathNotFoundError/>;
+    };
+
+    return (
        <div>
         <div>
             <Link to="/">
@@ -43,8 +45,7 @@ function User({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
             </div>
         </div>
     </div>
-    )
-
-}
+    );
+};
 
 export default User;

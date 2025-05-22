@@ -1,8 +1,9 @@
 import { getRecentArticles} from "../../api";
 import { useState, useEffect } from "react";
+import { Link } from "react-router";
+
 import Loading from "../Loading/Loading";
 import GeneralError from "../Error/GeneralError";
-import { Link } from "react-router";
 
 function RecentArticles({loading, setLoading, error, setError}){
 const [recentArticles, setrecentArticles] = useState([]);
@@ -10,32 +11,30 @@ const [recentArticles, setrecentArticles] = useState([]);
         setLoading(true);
         getRecentArticles()
         .then((res) => {
-            const recentFiveArticles = res.articles.slice(0,5)
-            setrecentArticles(recentFiveArticles)
+            const recentFiveArticles = res.articles.slice(0,5);
+            setrecentArticles(recentFiveArticles);
         })
         .catch((err) => {
-            console.log(err)
             setError(true);
         })
         .finally(() => {
             setLoading(false);
         })
-
-    }, [setrecentArticles])
+    }, [setrecentArticles]);
 
      if (loading){
-        return <Loading />
-    }
+        return <Loading />;
+    };
 
     if (error){
-        return <GeneralError />
-    }
+        return <GeneralError />;
+    };
 
     return (
         <div className="relative">
             <h2 className="text-xl p-4 bg-white">Recent Articles</h2>
             <div className="grid grid-cols-1 gap-6 p-5">
-                <table className="bg-white rounded-lg">
+                <table className=" min-w-full table-auto bg-white rounded-lg">
                     <tbody>
                         {recentArticles.map((article) => {
                             return(
@@ -45,12 +44,12 @@ const [recentArticles, setrecentArticles] = useState([]);
                                         "/>
                                     </td>
                                     <td className="p-4">
-                                    <h3>{article.title}</h3>
-                                    <h4>By {article.author}</h4>
-                                    <p>Topic: {article.topic}</p>
-                                    <Link to={`/articles/article/${article.article_id}`}>
-                                    <button className="bg-[#BBA5E1] p-2 rounded-lg">View</button>
-                                    </Link>
+                                        <h3>{article.title}</h3>
+                                        <h4>By {article.author}</h4>
+                                        <p>Topic: {article.topic}</p>
+                                        <Link to={`/articles/article/${article.article_id}`}>
+                                        <button className="bg-[#BBA5E1] p-2 rounded-lg">View</button>
+                                        </Link>
                                     </td>
                                 </tr>
                             )
@@ -59,7 +58,7 @@ const [recentArticles, setrecentArticles] = useState([]);
                 </table>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default RecentArticles;

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Loading from "../Loading/Loading";
-import Error from '../Error/GeneralError';
 import { getAllUsers } from "../../api";
+
+import Loading from "../Loading/Loading";
+import GeneralError from '../Error/GeneralError';
 
 function Login({loading, setLoading, error, setError, loggedIn, setLoggedIn, users, setUsers}){
 const [selectedUser, setSelectedUser] = useState("")
@@ -11,13 +12,12 @@ const [selectedUser, setSelectedUser] = useState("")
         setLoading(true);
         const storedUser = localStorage.getItem('loggedInUser');
         if (storedUser){
-            setSelectedUser(storedUser)
-            setLoggedIn(true)
+            setSelectedUser(storedUser);
+            setLoggedIn(true);
         }
-
         getAllUsers()
         .then((res) => {
-            setUsers(res)
+            setUsers(res);
         })
         .catch((err) => {
             setError(true);
@@ -25,34 +25,31 @@ const [selectedUser, setSelectedUser] = useState("")
         .finally(() => {
             setLoading(false);
         })
-    }, [setUsers, setLoading, setError, setLoggedIn])
+    }, [setUsers, setLoading, setError, setLoggedIn]);
 
     function handleUserChange(e){
         setSelectedUser(e.target.value);
     }
 
     function handleSubmit(e){
-        e.preventDefault()
-        console.log(selectedUser)
+        e.preventDefault();
         if (selectedUser){
-           
            const user = users.find((user) => user.username === selectedUser);
            
            if (user){
             setLoggedIn(true);
             localStorage.setItem('loggedInUser', selectedUser);
-           }
-        }
-    }
+           };
+        };
+    };
 
-       if (loading){
-        return <Loading />
-    }
+    if (loading){
+        return <Loading />;
+    };
 
     if (error){
-        return <GeneralError />
-
-    }
+        return <GeneralError />;
+    };
 
     return(
         <div className="max-w-md mx-auto mt-8 p-6">
@@ -89,7 +86,7 @@ const [selectedUser, setSelectedUser] = useState("")
                 </div>
             </form>)}
         </div>
-    )
-}
+    );
+};
 
 export default Login;
