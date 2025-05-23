@@ -20,9 +20,6 @@ function Profile(){
                 <Link to="/login">
                 <button className="bg-[#BBA5E1] p-3 w-25 rounded-lg text-white">Login</button>
                 </Link>
-                <Link to="/signup">
-                <button className="bg-[#BBA5E1] p-3 w-25 rounded-lg text-white">Sign Up</button>
-                </Link>
             </div>
             )}
         </div>  

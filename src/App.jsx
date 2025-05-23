@@ -13,39 +13,44 @@ import Profile from './components/Homepage/Profile';
 import AllTopics from './components/Topics/AllTopics';
 import PathNotFoundError from './components/Error/PathNotFoundError';
 
+import { LoadingProvider } from './contexts/LoadingContext';
+import { ErrorProvider } from './contexts/ErrorContext';
+
 function App() {
 const [articles, setArticles] = useState([]);
 const [users, setUsers] = useState([]);
 const [loggedIn, setLoggedIn] = useState(false);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState(false);
 
   return (
       <div className="bg-gradient-to-b from-[#32116e] to-[#bba5e1] bg-cover bg-center min-h-screen">
-      <Routes>
-        <Route path="/" element={
-          <div>
-            <Homepage loading={loading} setLoading={setLoading} error={error} setError={setError}/>
-          </div>} />
+        <LoadingProvider>
+        <ErrorProvider>
+          <Routes>
+            <Route path="/" element={
+              <div>
+                <Homepage/>
+              </div>} />
 
-        <Route path="/articles/:topic?" element={<AllArticles articles={articles} setArticles={setArticles} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
+            <Route path="/articles/:topic?" element={<AllArticles articles={articles} setArticles={setArticles}/>} />
 
-        <Route path="/articles/article/:articleId" element={<Article loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
+            <Route path="/articles/article/:articleId" element={<Article loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
 
-        <Route path="/articles/article/:articleId/comments" element={<CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
+            <Route path="/articles/article/:articleId/comments" element={<CommentsByArticle loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
 
-        <Route path="/users" element={<AllUsers users={users} setUsers={setUsers} loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
+            <Route path="/users" element={<AllUsers users={users} setUsers={setUsers}/>} />
 
-        <Route path="/users/:username" element={<User loading={loading} setLoading={setLoading} error={error} setError={setError}/>} />
+            <Route path="/users/:username" element={<User loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
 
-        <Route path="/login" element={<Login loading={loading} setLoading={setLoading} error={error} setError={setError} loggedIn={loggedIn} setLoggedIn={setLoggedIn} users={users} setUsers={setUsers} />} />
+            <Route path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} users={users} setUsers={setUsers} />} />
 
-        <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<Profile />} />
 
-        <Route path="/topics" element={<AllTopics loading={loading} setLoading={setLoading} error={error} setError={setError}/>}></Route>
-      
-        <Route path="*" element={<PathNotFoundError />} />
-      </Routes>
+            <Route path="/topics" element={<AllTopics />}></Route>
+          
+            <Route path="*" element={<PathNotFoundError />} />
+          </Routes>
+        </ErrorProvider>
+        </LoadingProvider>
       
     </div>
   )

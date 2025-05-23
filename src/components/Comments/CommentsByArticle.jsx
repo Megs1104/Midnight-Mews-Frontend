@@ -1,11 +1,15 @@
 import { getCommentsByArticle } from "../../api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { updateCommentVotesByArticle, deleteComment, formattingDate } from "../../api";
+import { LoadingContext } from "../../contexts/LoadingContext";
 
 import Loading from '../Loading/Loading';
 import GeneralError from '../Error/GeneralError';
+import { ErrorContext } from "../../contexts/ErrorContext";
 
-function CommentsByArticle({loading, setLoading, error, setError, articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
+function CommentsByArticle({articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
+    const {loading, setLoading} = useContext(LoadingContext);
+    const {error, setError} = useContext(ErrorContext)
     const [user, setUser] = useState(null);
     const [votingError, setVotingError] = useState(null);
     const [deleteError, setDeleteError] = useState(null);

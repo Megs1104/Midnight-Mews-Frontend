@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 
 import HomepageHeader from "./HomepageHeader";
 import RecentArticles from "./RecentArticles";
 import Profile from "./Profile";
+import Loading from "../Loading/Loading";
+import { LoadingContext } from "../../contexts/LoadingContext";
+import { ErrorContext } from "../../contexts/ErrorContext";
  
- function Homepage({loading, setLoading, error, setError}){
+ function Homepage(){
+    const {loading, setLoading} = useContext(LoadingContext);
+    const {error, setError} = useContext(ErrorContext);
 
     useEffect(() => {
         setError(false);
@@ -15,7 +20,7 @@ import Profile from "./Profile";
     <div className="relative">
             <Profile />
             <HomepageHeader />
-        <div className="mt-1 p-2"> 
+        <div className="p-2"> 
             <div className="bg-[#BBA5E1] p-4 rounded-lg w-full mt-2">
             <Link to="/articles">
                 <button className="bg-white p-3 rounded-lg">Articles</button>

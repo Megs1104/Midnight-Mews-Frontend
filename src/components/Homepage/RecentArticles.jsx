@@ -1,12 +1,17 @@
 import { getRecentArticles} from "../../api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router";
+import { LoadingContext } from "../../contexts/LoadingContext";
+import { ErrorContext } from "../../contexts/ErrorContext";
 
 import Loading from "../Loading/Loading";
 import GeneralError from "../Error/GeneralError";
 
-function RecentArticles({loading, setLoading, error, setError}){
+function RecentArticles(){
 const [recentArticles, setrecentArticles] = useState([]);
+const {loading, setLoading} = useContext(LoadingContext);
+const {error, setError} = useContext(ErrorContext)
+
     useEffect(() => {
         setLoading(true);
         getRecentArticles()
@@ -32,30 +37,24 @@ const [recentArticles, setrecentArticles] = useState([]);
 
     return (
         <div className="relative">
-            <h2 className="text-xl p-4 bg-white">Recent Articles</h2>
-            <div className="grid grid-cols-1 gap-6 p-5">
-                <table className=" min-w-full table-auto bg-white rounded-lg">
-                    <tbody>
+            <h2 className="text-xl p-4 bg-white mt-1 w-50 rounded-lg mx-auto">Recent Articles</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 p-5">
                         {recentArticles.map((article) => {
                             return(
-                                <tr key={article.article_id}>
-                                    <td className="p-4 text-center">
-                                        <img src={article.article_img_url} alt={`Image for ${article.title}`} className="w-32 h-32 object-cover mx-auto
-                                        "/>
-                                    </td>
-                                    <td className="p-4">
-                                        <h3>{article.title}</h3>
-                                        <h4>By {article.author}</h4>
-                                        <p>Topic: {article.topic}</p>
-                                        <Link to={`/articles/article/${article.article_id}`}>
-                                        <button className="bg-[#BBA5E1] p-2 rounded-lg">View</button>
-                                        </Link>
-                                    </td>
-                                </tr>
+                             <div className="bg-white rounded-lg p-2 flex flex-col justify-between h-full" key={article.article_id}>
+                                <img className="w-40 mx-auto p-2" src={article.article_img_url} alt={`Image for ${article.title}`} />
+                                <h3>{article.title}</h3>
+                                <h4>Author: {article.author}</h4>
+                                <p>Topic: {article.topic}</p>
+                            <div className="mt-auto">
+                                <Link to={`/articles/article/${article.article_id}`}>
+                                <button className="bg-[#BBA5E1] p-2 rounded-lg mt-2">View</button>
+                                </Link>
+                            </div>
+                        </div>
                             )
                         })}
-                    </tbody>
-                </table>
+            
             </div>
         </div>
     );

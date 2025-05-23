@@ -23,25 +23,18 @@ const [postingError, setPostingError] = useState(false);
             setPostingLoading(true);
             setPostingError(false);
 
-            if(!navigator.online){
-                setPostingLoading(false);
-                setPostingError(true);
-                return;
-            }
-
-            const errorTimer = setTimeout(() => {
-                setPostingLoading(false);
-                setPostingError(true);
-            }, 300000); 
-
             postNewComment(articleId, loggedInUser, newComment)
             .then((newCommentData) => {
-                clearTimeout(errorTimer);
+                console.log(newCommentData)
+                console.log(comments)
                 setNewComment("");
-                setComments((prevComments) => [ newCommentData, ...prevComments]);
+                setComments((prevComments) => {
+                    const updatedComments = [newCommentData, ...prevComments];
+                    return updatedComments;
+                })
             })
             .catch((err) => {
-                clearTimeout(errorTimer);
+                console.log(err)
                 setPostingError(true);
             })
             .finally(() => {

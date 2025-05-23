@@ -1,12 +1,16 @@
 import { getAllUsers } from "../../api";
-import { useEffect} from "react";
+import { useEffect, useContext} from "react";
 import { Link } from "react-router";
+import { LoadingContext } from "../../contexts/LoadingContext";
+import { ErrorContext } from "../../contexts/ErrorContext";
 
 import Loading from "../Loading/Loading";
 import GeneralError from '../Error/GeneralError';
 
-function AllUsers({users, setUsers, loading, setLoading, error, setError}){
-useEffect(() => {
+function AllUsers({users, setUsers}){
+    const {loading, setLoading} = useContext(LoadingContext);
+    const {error, setError} = useContext(ErrorContext)
+    useEffect(() => {
         setLoading(true);
         getAllUsers()
         .then((res) => {
@@ -34,7 +38,7 @@ useEffect(() => {
             <Link to="/">
             <button className="bg-[#BBA5E1] p-2 rounded-lg top-2 left-2 absolute">Home</button>
             </Link>
-            <div className="grid grid-cols-5 sm:grid-cols-2 lg:grid-cols-5 gap-6 p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-6 p-5">
 
                 {users.map((user) => {
                    return( <div className="bg-[#BBA5E1] rounded-lg p-2 shadow-lg" key={user.username}>

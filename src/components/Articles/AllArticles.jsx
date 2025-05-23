@@ -1,11 +1,15 @@
 import { getAllArticles } from "../../api";
 import { useParams, useSearchParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router";
 import Loading from "../Loading/Loading";
 import NotFoundError from '../Error/NotFoundError';
+import { LoadingContext } from "../../contexts/LoadingContext";
+import { ErrorContext } from "../../contexts/ErrorContext";
 
-function AllArticles({articles, setArticles, loading, setLoading, error, setError}){
+function AllArticles({articles, setArticles}){
+    const {loading, setLoading} = useContext(LoadingContext);
+    const {error, setError} = useContext(ErrorContext);
     const { topic } = useParams();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
