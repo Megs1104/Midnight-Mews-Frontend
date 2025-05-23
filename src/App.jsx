@@ -15,9 +15,11 @@ import PathNotFoundError from './components/Error/PathNotFoundError';
 
 import { LoadingProvider } from './contexts/LoadingContext';
 import { ErrorProvider } from './contexts/ErrorContext';
+import AddNewArticle from './components/Articles/AddNewArticle';
 
 function App() {
 const [articles, setArticles] = useState([]);
+const [topics, setTopics] = useState([]);
 const [users, setUsers] = useState([]);
 const [loggedIn, setLoggedIn] = useState(false);
 
@@ -28,7 +30,7 @@ const [loggedIn, setLoggedIn] = useState(false);
           <Routes>
             <Route path="/" element={
               <div>
-                <Homepage/>
+                <Homepage articles={articles}/>
               </div>} />
 
             <Route path="/articles/:topic?" element={<AllArticles articles={articles} setArticles={setArticles}/>} />
@@ -45,9 +47,12 @@ const [loggedIn, setLoggedIn] = useState(false);
 
             <Route path="/profile" element={<Profile />} />
 
-            <Route path="/topics" element={<AllTopics />}></Route>
+            <Route path="/topics" element={<AllTopics topics={topics} setTopics={setTopics} />} />
           
             <Route path="*" element={<PathNotFoundError />} />
+
+            <Route path="/articles/post" element={<AddNewArticle loggedIn={loggedIn} setLoggedIn={setLoggedIn} articles={articles} setArticles={setArticles} topics={topics} setTopics={setTopics}/>} />
+
           </Routes>
         </ErrorProvider>
         </LoadingProvider>

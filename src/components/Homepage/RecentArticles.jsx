@@ -7,7 +7,7 @@ import { ErrorContext } from "../../contexts/ErrorContext";
 import Loading from "../Loading/Loading";
 import GeneralError from "../Error/GeneralError";
 
-function RecentArticles(){
+function RecentArticles({articles}){
 const [recentArticles, setrecentArticles] = useState([]);
 const {loading, setLoading} = useContext(LoadingContext);
 const {error, setError} = useContext(ErrorContext)
@@ -25,7 +25,7 @@ const {error, setError} = useContext(ErrorContext)
         .finally(() => {
             setLoading(false);
         })
-    }, [setrecentArticles]);
+    }, [setrecentArticles, articles]);
 
      if (loading){
         return <Loading />;

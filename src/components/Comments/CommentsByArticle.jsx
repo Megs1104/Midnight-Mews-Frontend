@@ -26,10 +26,7 @@ function CommentsByArticle({articleId, loggedIn, setLoggedIn, comments, setComme
     useEffect(() => {
         getCommentsByArticle(articleId)
         .then((res) => {
-            setComments(res);
-        })
-        .catch((err) => {
-            setError(true);
+            setComments(res.length ? res : []);
         })
         .finally(() => {
             setLoading(false);
@@ -100,11 +97,13 @@ function CommentsByArticle({articleId, loggedIn, setLoggedIn, comments, setComme
 
     return (
         <div className="relative p-4">
+            {comments && comments.length > 0 && (
+                <>
             <h2 className="text-3xl text-white p-4">Comments</h2>
 
                 <table className="bg-white rounded-lg">
                     <tbody>
-                        {comments.map((comment) => {
+                         {comments.map((comment) => {
                             const hasVoted = localStorage.getItem(`voted_${comment.comment_id}`) === 'true'
                             return(
                                 <tr key={comment.comment_id} className="border-b">
@@ -136,25 +135,27 @@ function CommentsByArticle({articleId, loggedIn, setLoggedIn, comments, setComme
                                      )}  
 
                                      {user === comment.author && (
-                                        <div>
+                                        <>
                                             {deleteError === comment.comment_id && (
                                                 <div>
                                                      <p className="bg-white text-red-600 rounded-lg p-2">Error deleting comment, please try again later.</p>
                                                 </div>
                                             )}
                                             <button onClick={() => handleDelete(comment.comment_id)} className="bg-[#BBA5E1] p-2 w-20 rounded-lg">Delete</button>
-                                        </div>
+                                        </>
                                      )} 
                                      </>
                                     ) : ( <p>Login to Vote</p> 
                                     )}
-                                    </div>
+                                        </div>
                                     </td>
                                 </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
+                                )
+                            })}
+                          </tbody>  
+                    </table> 
+                </>  
+             )}     
         </div>
     );
 };

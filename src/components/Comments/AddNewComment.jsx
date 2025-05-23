@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { postNewComment } from "../../api";
 
 function AddNewComment({articleId, loggedIn, setLoggedIn, comments, setComments, newComment, setNewComment}){
-const [postingLoading, setPostingLoading] = useState(false);
-const [postingError, setPostingError] = useState(false);
+    const [postingLoading, setPostingLoading] = useState(false);
+    const [postingError, setPostingError] = useState(false);
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');

@@ -3,8 +3,23 @@ import React from "react";
 import { format } from "date-fns";
 
 const midnightMewsApi = axios.create({
-    baseURL: "https://megs-news-app.onrender.com/api"
+    baseURL: "https://megs-news-app.onrender.com/api/"
 });
+
+
+export const formattingString = (string) => {
+    if(!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const formattingDate = (date) => {
+    if (date){
+        const parsedDate = new Date(date)
+        return format(parsedDate, "MMM dd, yyyy HH:mm a");
+    }
+    return "Date not available";
+};
+
 
 export const getAllArticles = (topic, sortBy, order, currentPage, articlesPerPage) => {
 
@@ -28,19 +43,6 @@ export const getArticle = (articleId) => {
     .then((res) => {
         return res.data.article;
     });
-};
-
-export const formattingString = (string) => {
-    if(!string) return "";
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-export const formattingDate = (date) => {
-    if (date){
-        const parsedDate = new Date(date)
-        return format(parsedDate, "MMM dd, yyyy HH:mm a");
-    }
-    return "Date not available";
 };
 
 export const getRecentArticles = () => {
@@ -71,6 +73,14 @@ export const getUser = (username) => {
     });
 };
 
+export const getAllTopics = () => {
+    return midnightMewsApi.get("/topics")
+    .then((res) => {
+        return res.data.topics;
+    });
+};
+
+
 export const updateCommentVotesByArticle = (commentId, inc_votes) => {
     return midnightMewsApi.patch(`/comments/${commentId}`, {
         inc_votes: inc_votes
@@ -89,6 +99,7 @@ export const updateArticleVotes = (articleId, inc_votes) => {
     });
 };
 
+
 export const postNewComment = (articleId, author, body) => {
     return midnightMewsApi.post(`/articles/${articleId}/comments`, {
         author: author, body: body
@@ -98,13 +109,18 @@ export const postNewComment = (articleId, author, body) => {
     });
 };
 
+export const postNewArticle = (articleData) => {
+    return midnightMewsApi.post(`/articles`, articleData)
+    .then((res) => {
+        return res.data.newArticle;
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+};
+
+
 export const deleteComment = (commentId) => {
     return midnightMewsApi.delete(`/comments/${commentId}`);
 };
 
-export const getAllTopics = () => {
-    return midnightMewsApi.get("/topics")
-    .then((res) => {
-        return res.data.topics;
-    });
-};
