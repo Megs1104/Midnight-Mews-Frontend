@@ -1,5 +1,5 @@
 import { getAllTopics, formattingString } from "../../api";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Link } from "react-router";
 import { LoadingContext } from "../../contexts/LoadingContext";
 import { ErrorContext } from "../../contexts/ErrorContext";
@@ -7,10 +7,9 @@ import { ErrorContext } from "../../contexts/ErrorContext";
 import Loading from "../Loading/Loading";
 import GeneralError from "../Error/GeneralError";
 
-function AllTopics(){
+function AllTopics({topics, setTopics}){
     const {loading, setLoading} = useContext(LoadingContext);
     const {error, setError} = useContext(ErrorContext);
-    const [topics, setTopics] = useState([]);
 
     useEffect(() => {
         setError(false)

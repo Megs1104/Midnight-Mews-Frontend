@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import { useEffect, useContext } from "react";
+import { LoadingContext } from "../../contexts/LoadingContext";
+import { ErrorContext } from "../../contexts/ErrorContext";
 
 import HomepageHeader from "./HomepageHeader";
 import RecentArticles from "./RecentArticles";
 import Profile from "./Profile";
 import HomepageFooter from "./HomepageFooter";
-import { LoadingContext } from "../../contexts/LoadingContext";
-import { ErrorContext } from "../../contexts/ErrorContext";
+import PostArticleButton from "./PostArticleButton";
  
- function Homepage(){
+ function Homepage({articles}){
     const {loading, setLoading} = useContext(LoadingContext);
     const {error, setError} = useContext(ErrorContext);
 
@@ -18,7 +19,10 @@ import { ErrorContext } from "../../contexts/ErrorContext";
     
     return (
     <div className="relative">
-            <Profile />
+        <div className="mt-4 flex justify-between bg-[#BBA5E1] p-4">
+         <Profile />
+        <PostArticleButton />   
+        </div>
             <HomepageHeader />
         <div className="p-2"> 
             <div className="bg-[#BBA5E1] p-4 rounded-lg w-full mt-2">
@@ -34,7 +38,7 @@ import { ErrorContext } from "../../contexts/ErrorContext";
              </div>
          </div>
          <div>
-            <RecentArticles loading={loading} setLoading={setLoading} error={error} setError={setError}/>
+            <RecentArticles articles={articles}/>
             <HomepageFooter />
          </div>
     </div>

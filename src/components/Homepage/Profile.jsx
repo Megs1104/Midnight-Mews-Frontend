@@ -10,8 +10,8 @@ function Profile(){
     };
 
     return (
-         <div className="mt-4 text-left relative bg-[#BBA5E1]">
-            <button onClick={toggleDropdown} className="bg-[#32116E] p-3 rounded-lg text-white mt-2 ml-2 mb-2 w-25">
+         <div className="text-left relative">
+            <button onClick={toggleDropdown} className="bg-[#32116E] p-3 rounded-lg text-white mt-2 ml-2 w-25">
                 Profile
             </button>
 

@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useState, useEffect, useContext } from "react";
 import { getArticle, formattingString, updateArticleVotes, formattingDate } from '../../api';
 import { Link } from "react-router";
@@ -22,7 +22,6 @@ function Article({loggedIn, setLoggedIn}){
     const [hasAlreadyVoted, setHasAlreadyVoted] = useState(null);
 
     const loggedInUser = localStorage.getItem('loggedInUser');
-    const navigate = useNavigate();
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
@@ -32,8 +31,8 @@ function Article({loggedIn, setLoggedIn}){
     }, []);
 
     useEffect(() => {
-        setLoading(true);
-        setError(false);
+        setError(false)
+        setLoading(true)
         getArticle(articleId)
         .then((res) => {
             setArticle(res);
@@ -94,6 +93,7 @@ function Article({loggedIn, setLoggedIn}){
     if (error){
         return <NotFoundError />;
     };
+
 
     return (
        <div>
