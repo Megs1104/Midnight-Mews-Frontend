@@ -16,7 +16,7 @@ const {error, setError} = useContext(ErrorContext)
         setLoading(true);
         getRecentArticles()
         .then((res) => {
-            const recentFiveArticles = res.articles.slice(0,5);
+            const recentFiveArticles = res.articles.slice(0,6);
             setrecentArticles(recentFiveArticles);
         })
         .catch((err) => {

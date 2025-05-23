@@ -4,7 +4,7 @@ import { useEffect, useContext } from "react";
 import HomepageHeader from "./HomepageHeader";
 import RecentArticles from "./RecentArticles";
 import Profile from "./Profile";
-import Loading from "../Loading/Loading";
+import HomepageFooter from "./HomepageFooter";
 import { LoadingContext } from "../../contexts/LoadingContext";
 import { ErrorContext } from "../../contexts/ErrorContext";
  
@@ -35,6 +35,7 @@ import { ErrorContext } from "../../contexts/ErrorContext";
          </div>
          <div>
             <RecentArticles loading={loading} setLoading={setLoading} error={error} setError={setError}/>
+            <HomepageFooter />
          </div>
     </div>
     );
