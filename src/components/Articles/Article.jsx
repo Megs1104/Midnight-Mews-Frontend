@@ -1,15 +1,19 @@
-import { useParams } from "react-router";
-import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router";
+import { useState, useEffect, useContext } from "react";
 import { getArticle, formattingString, updateArticleVotes, formattingDate } from '../../api';
 import { Link } from "react-router";
+import { LoadingContext } from "../../contexts/LoadingContext";
+import { ErrorContext } from "../../contexts/ErrorContext";
 
 import Loading from '../Loading/Loading';
 import NotFoundError from '../Error/NotFoundError';
 import CommentsByArticle from "../Comments/CommentsByArticle";
 import AddNewComment from "../Comments/AddNewComment";
 
-function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
+function Article({loggedIn, setLoggedIn}){
     const { articleId } = useParams();
+    const {loading, setLoading} = useContext(LoadingContext);
+    const {error, setError} = useContext(ErrorContext);
     const [article, setArticle] = useState({});
     const [hasVoted, setHasVoted] = useState(false);
     const [comments, setComments] = useState([]);
@@ -18,6 +22,7 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
     const [hasAlreadyVoted, setHasAlreadyVoted] = useState(null);
 
     const loggedInUser = localStorage.getItem('loggedInUser');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
@@ -95,8 +100,9 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
         <div>
             <Link to="/">
             <button className="bg-[#BBA5E1] p-2 rounded-lg fixed top-4 left-4">Home</button>
-            </Link>
+            </Link>    
         </div>
+            <>
             <div className="relative p-4" key={article.article_id}>
                 <h3 className="text-3xl text-white p-4">{article.title}</h3>
                 <h4 className="text-xl text-white p-4">By {article.author}</h4>
@@ -106,8 +112,8 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
                 <p>Votes: {article.votes}</p>
             
             {loggedIn ? (
-                     <>
-                     {loggedInUser !== article.author && (
+                <>
+                    {loggedInUser !== article.author && (
                         <>
                         {votingError && (
                             <div>
@@ -123,24 +129,21 @@ function Article({loading, setLoading, error, setError, loggedIn, setLoggedIn}){
                         <button onClick={() => handleVote(article.article_id, "+")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">+1</button>
                         <button onClick={() => handleVote(article.article_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg ml-2">-1</button>
                         </>
-                     )}
-                        
-                     {loggedInUser === article.author && (
-                        <button className="bg-[#BBA5E1] p-2 w-35 rounded-lg">Delete Article</button>
-                     )}
+                    )}
                     </>
-                    ) : (
+                     ): (
                         <p>Login to Vote</p>
-                    )} 
-
+                    )}
+                        
                 <p>Created at: {formattingDate(article.created_at)}</p>
                 <p>Comment Count: {article.comment_count}</p>
                 <p>{article.body}</p>
             </div>
         </div>
+        
             <AddNewComment articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
             <CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
-            
+        </>
     </div>
     )
 }
