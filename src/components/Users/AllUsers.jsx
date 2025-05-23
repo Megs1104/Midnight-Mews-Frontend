@@ -34,10 +34,12 @@ function AllUsers({users, setUsers}){
 
     return (
         <div className="relative">
+             <div className="mt-4 text-left relative bg-[#BBA5E1]">
+                <Link to="/">
+                    <button className="bg-[#32116E] p-3 rounded-lg text-white mt-2 ml-2 mb-2 w-25">Home</button>
+                </Link>
+            </div>
             <h2 className="text-xl p-4 bg-white">All Users</h2>
-            <Link to="/">
-            <button className="bg-[#BBA5E1] p-2 rounded-lg top-2 left-2 absolute">Home</button>
-            </Link>
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-5 gap-6 p-5">
 
                 {users.map((user) => {

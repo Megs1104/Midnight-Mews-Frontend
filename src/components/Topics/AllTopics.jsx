@@ -13,6 +13,7 @@ function AllTopics(){
     const [topics, setTopics] = useState([]);
 
     useEffect(() => {
+        setError(false)
         setLoading(true);
         getAllTopics()
         .then((res) => {
@@ -36,22 +37,30 @@ function AllTopics(){
 
     return (
         <div className="relative">
+             <div className="mt-4 text-left relative bg-[#BBA5E1]">
+                <Link to="/">
+                    <button className="bg-[#32116E] p-3 rounded-lg text-white mt-2 ml-2 mb-2 w-25">Home</button>
+                </Link>
+            </div>
             <h2 className="text-xl p-4 bg-white">Topics</h2>
-            <Link to="/">
-            <button className="bg-[#BBA5E1] p-2 rounded-lg top-2 left-2 absolute">Home</button>
-            </Link>
-            <div className="grid grid-cols-5 sm:grid-cols-2 lg:grid-cols-5 gap-6 p-5">
+            
+            <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6 p-5 justify-items-center">
 
                 {topics.map((topic) => {
                    return( 
-                   <div className="bg-[#BBA5E1] rounded-lg p-2 shadow-lg" key={topic.slug}>
-                    <div className="flex flex-col items-center justify-center p-4">
-                        <h3 className="text-xl text-white">{formattingString(topic.slug)}</h3>
-                        <h4 className="text-l text-white">{topic.description}</h4>
+                   <div className="bg-[#BBA5E1] rounded-lg p-2 shadow-lg w-80" key={topic.slug}>
+                    <div className="mb-4 flex justify-between">
+                        <div className="flex-1 text-left mt-3">
+                            <h3 className="text-xl text-white">{formattingString(topic.slug)}</h3>
+                            <h4 className="text-l text-white">{topic.description}</h4>
+                        </div>
 
-                        <Link to={`/articles/${topic.slug}`}>
-                        <button className="bg-[#32116E] text-white p-2 rounded-lg">View</button>
-                        </Link>
+                        <div className="ml-4 mt-5">
+                            <Link to={`/articles/${topic.slug}`}>
+                            <button className="bg-[#32116E] text-white p-2 rounded-lg">View</button>
+                            </Link>
+
+                        </div>
                     </div>
                    </div>
                 )})}
