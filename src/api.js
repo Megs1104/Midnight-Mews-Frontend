@@ -124,3 +124,7 @@ export const deleteComment = (commentId) => {
     return midnightMewsApi.delete(`/comments/${commentId}`);
 };
 
+export const deleteArticle = (articleId) => {
+    return midnightMewsApi.delete(`/articles/${articleId}`);
+};
+

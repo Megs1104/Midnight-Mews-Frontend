@@ -132,9 +132,9 @@ function CommentsByArticle({articleId, loggedIn, setLoggedIn, comments, setComme
                                         <button onClick={() => handleVote(comment.comment_id, "+")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">+1</button>
                                         <button onClick={() => handleVote(comment.comment_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg">-1</button>
                                         </>
-                                     )}  
+                                        )}  
 
-                                     {user === comment.author && (
+                                        {user === comment.author && (
                                         <>
                                             {deleteError === comment.comment_id && (
                                                 <div>
@@ -143,7 +143,7 @@ function CommentsByArticle({articleId, loggedIn, setLoggedIn, comments, setComme
                                             )}
                                             <button onClick={() => handleDelete(comment.comment_id)} className="bg-[#BBA5E1] p-2 w-20 rounded-lg">Delete</button>
                                         </>
-                                     )} 
+                                        )} 
                                      </>
                                     ) : ( <p>Login to Vote</p> 
                                     )}

@@ -6,6 +6,7 @@ import Loading from "../Loading/Loading";
 import NotFoundError from '../Error/NotFoundError';
 import { LoadingContext } from "../../contexts/LoadingContext";
 import { ErrorContext } from "../../contexts/ErrorContext";
+import PostArticleButton from "../Homepage/PostArticleButton";
 
 function AllArticles({articles, setArticles}){
     const {loading, setLoading} = useContext(LoadingContext);
@@ -66,10 +67,12 @@ function AllArticles({articles, setArticles}){
 
     return (
         <div className="relative">
-            <div className="mt-4 text-left relative bg-[#BBA5E1]">
+            <div className="mt-4 flex justify-between bg-[#BBA5E1] p-4">
                 <Link to="/">
                     <button className="bg-[#32116E] p-3 rounded-lg text-white mt-2 ml-2 mb-2 w-25">Home</button>
                 </Link>
+                <PostArticleButton /> 
+
             </div>
 
             <div className="relative">

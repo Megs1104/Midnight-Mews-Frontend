@@ -2,12 +2,14 @@ import { useState, useEffect, useContext } from "react";
 import { postNewArticle } from "../../api";
 import { getAllTopics } from "../../api";
 import { ErrorContext } from "../../contexts/ErrorContext";
+import { useNavigate } from "react-router";
 
 function AddNewArticle({loggedIn, setLoggedIn, articles, setArticles, topics, setTopics}){
     const [newArticle, setNewArticle] = useState({author: "",title: "",body: "",topic:"",article_img_url: ""});
     const [postingLoading, setPostingLoading] = useState(false);
     const [postingError, setPostingError] = useState(false);
     const {error, setError} = useContext(ErrorContext);
+    const navigate = useNavigate()
 
      useEffect(() => {
             getAllTopics()
@@ -37,7 +39,6 @@ function AddNewArticle({loggedIn, setLoggedIn, articles, setArticles, topics, se
     }
 
     function handleSubmit(e){
-        console.log(typeof newArticle.topic)
         const loggedInUser = localStorage.getItem('loggedInUser');
         e.preventDefault();
         setPostingLoading(true);
@@ -54,6 +55,7 @@ function AddNewArticle({loggedIn, setLoggedIn, articles, setArticles, topics, se
         })
         .finally(() => {
             setPostingLoading(false);
+            navigate(`/articles`)
         })
 
     }

@@ -35,7 +35,7 @@ const [loggedIn, setLoggedIn] = useState(false);
 
             <Route path="/articles/:topic?" element={<AllArticles articles={articles} setArticles={setArticles}/>} />
 
-            <Route path="/articles/article/:articleId" element={<Article loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
+            <Route path="/articles/article/:articleId" element={<Article loggedIn={loggedIn} setLoggedIn={setLoggedIn} rticles={articles} setArticles={setArticles}/>} />
 
             <Route path="/articles/article/:articleId/comments" element={<CommentsByArticle loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
 

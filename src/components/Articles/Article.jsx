@@ -1,6 +1,6 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useState, useEffect, useContext } from "react";
-import { getArticle, formattingString, updateArticleVotes, formattingDate } from '../../api';
+import { getArticle, formattingString, updateArticleVotes, formattingDate, deleteArticle, getAllArticles } from '../../api';
 import { Link } from "react-router";
 import { LoadingContext } from "../../contexts/LoadingContext";
 import { ErrorContext } from "../../contexts/ErrorContext";
@@ -10,7 +10,7 @@ import NotFoundError from '../Error/NotFoundError';
 import CommentsByArticle from "../Comments/CommentsByArticle";
 import AddNewComment from "../Comments/AddNewComment";
 
-function Article({loggedIn, setLoggedIn}){
+function Article({loggedIn, setLoggedIn, articles, setArticles}){
     const { articleId } = useParams();
     const {loading, setLoading} = useContext(LoadingContext);
     const {error, setError} = useContext(ErrorContext);
@@ -20,8 +20,24 @@ function Article({loggedIn, setLoggedIn}){
     const [newComment, setNewComment] = useState("");
     const [votingError, setVotingError] = useState(null);
     const [hasAlreadyVoted, setHasAlreadyVoted] = useState(null);
+    const [deleteError, setDeleteError] = useState(null);
+    const [deleted, setDeleted] = useState(false);
+
+    const navigate = useNavigate();
 
     const loggedInUser = localStorage.getItem('loggedInUser');
+
+     useEffect(() => {
+            setLoading(true);
+            getAllArticles()
+            .then((res) => {
+                setArticles(res.articles);
+            })
+            .catch((err) => {
+                setError(true);
+            })
+    
+        }, []);
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
@@ -86,6 +102,18 @@ function Article({loggedIn, setLoggedIn}){
         });
     };
 
+    function handleDelete(articleId){
+            deleteArticle(articleId)
+            .then(() => {
+                setDeleteError(null);
+                setDeleted(true);
+            })
+            .catch((err)=>{
+                console.log(err)
+                setDeleteError(articleId);
+            })
+        };
+
      if (loading){
         return <Loading />;
     };
@@ -97,12 +125,11 @@ function Article({loggedIn, setLoggedIn}){
 
     return (
        <div>
-        <div>
-            <Link to="/">
-            <button className="bg-[#BBA5E1] p-2 rounded-lg fixed top-4 left-4">Home</button>
-            </Link>    
-        </div>
+        {!deleted && (
             <>
+            <Link to="/">
+            <button className="bg-[#BBA5E1] p-2 rounded-lg fixed top-4">Home</button>
+            </Link> 
             <div className="relative p-4" key={article.article_id}>
                 <h3 className="text-3xl text-white p-4">{article.title}</h3>
                 <h4 className="text-xl text-white p-4">By {article.author}</h4>
@@ -130,6 +157,17 @@ function Article({loggedIn, setLoggedIn}){
                         <button onClick={() => handleVote(article.article_id, "-")} className="bg-[#BBA5E1] p-2 w-15 rounded-lg ml-2">-1</button>
                         </>
                     )}
+
+                    {loggedInUser === article.author && (
+                             <>
+                                {deleteError === article.article_id && (
+                                    <div>
+                                         <p className="bg-white text-red-600 rounded-lg p-2">Error deleting article, please try again later.</p>
+                                    </div>
+                                )}
+                                 <button onClick={() => handleDelete(article.article_id)} className="bg-[#BBA5E1] p-2 w-20 rounded-lg">Delete</button>
+                             </>
+                            )} 
                     </>
                      ): (
                         <p>Login to Vote</p>
@@ -144,6 +182,17 @@ function Article({loggedIn, setLoggedIn}){
             <AddNewComment articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
             <CommentsByArticle loading={loading} setLoading={setLoading} error={error} setError={setError} articleId={articleId} loggedIn={loggedIn} setLoggedIn={setLoggedIn} comments={comments} setComments={setComments} newComment={newComment} setNewComment={setNewComment}/>
         </>
+        )}
+
+        {deleted && (
+        <div>
+            <p className="text-white rounded-lg p-2">Article Successfully Deleted.</p>
+            <Link to="/">
+            <button className="bg-[#BBA5E1] p-2 rounded-lg fixed top-4"> Go Home</button>
+            </Link>    
+        </div>
+        )}
+            
     </div>
     )
 }
